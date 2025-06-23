@@ -76,8 +76,8 @@ export const ClockInOut: React.FC<Props> = () => {
     <div style={{ maxWidth: 400, margin: "auto", padding: 20 }}>
       <h2>Klok Systeem</h2>
 
-      <input placeholder="Naam" value={username} onChange={(e) => setUsername(e.target.value)} disabled={status !== "out"} />
-      <input placeholder="Code" type="password" value={code} onChange={(e) => setCode(e.target.value)} disabled={status === "in" || status === "break"} />
+      <input placeholder="Naam" value={username} onChange={(e) => setUsername(e.target.value)} />
+      <input placeholder="Code" type="password" value={code} onChange={(e) => setCode(e.target.value)} />
 
       <div style={{ marginTop: 20 }}>
         {status === "out" && (
