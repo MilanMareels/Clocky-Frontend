@@ -7,3 +7,40 @@
     transform: rotate(360deg);
   }
 }
+
+/* View toggle container */
+.view-toggle-container {
+  display: flex;
+  border-radius: 8px;
+  background-color: #f3f4f6;
+  padding: 4px;
+  margin-bottom: 20px;
+  width: fit-content;
+}
+
+/* Base button style */
+.toggle-button {
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-weight: 500;
+  color: #4b5563;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+/* Active button style */
+.toggle-button.active {
+  background-color: white;
+  color: #2563eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+}
+
+/* Hover effect */
+.toggle-button:not(.active):hover {
+  color: #1e40af;
+  background-color: #e5e7eb;
+}
