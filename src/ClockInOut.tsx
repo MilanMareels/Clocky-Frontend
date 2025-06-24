@@ -47,7 +47,7 @@ export const ClockInOut: React.FC<Props> = () => {
         <div style={{ display: "flex", justifyContent: "center" }}>
           <h1>Clocky</h1>
         </div>
-        <input style={inputStyle(status !== "out")} placeholder="Naam" value={username} onChange={(e) => setUsername(e.target.value)} disabled={status !== "out"} />
+        <input style={inputStyle(status !== "out")} placeholder="Naam" value={username.toLocaleLowerCase()} onChange={(e) => setUsername(e.target.value)} disabled={status !== "out"} />
 
         <input
           style={inputStyle(status === "in" || status === "break")}

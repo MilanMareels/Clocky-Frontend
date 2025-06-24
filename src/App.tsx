@@ -28,7 +28,7 @@ const App: React.FC = () => {
           <div style={{ display: "flex", justifyContent: "center" }}>
             <h1 style={{ fontFamily: "sans-serif" }}>Werkrapport</h1>
           </div>
-          <input style={inputStyle(false)} placeholder="Admin: vul gebruikersnaam in" value={adminUser} onChange={(e) => setAdminUser(e.target.value)} />
+          <input style={inputStyle(false)} placeholder="Admin: vul gebruikersnaam in" value={adminUser.toLocaleLowerCase()} onChange={(e) => setAdminUser(e.target.value)} />
           {adminUser && <AdminReport username={adminUser} />}
         </div>
       )}
