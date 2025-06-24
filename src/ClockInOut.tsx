@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { clockIn, clockOut, startBreak, endBreak } from "./api";
+import { containerStyle, inputStyle, getButtonStyle, messageStyle } from "./styles";
 
 interface Props {}
 
@@ -10,101 +11,117 @@ export const ClockInOut: React.FC<Props> = () => {
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Check localStorage for current status (simple client-side)
   useEffect(() => {
     const savedStatus = localStorage.getItem("clock-status");
-    if (savedStatus === "in" || savedStatus === "break") setStatus(savedStatus);
+    if (savedStatus === "in" || savedStatus === "break") {
+      setStatus(savedStatus);
+    }
   }, []);
 
-  const handleClockIn = async () => {
+  const handleAction = async (action: () => Promise<void>, successMessage: string, newStatus?: "out" | "in" | "break") => {
     setLoading(true);
+    setMessage(null);
     try {
-      await clockIn(username, code);
-      setStatus("in");
-      localStorage.setItem("clock-status", "in");
-      setMessage("Succesvol ingeklokt");
+      await action();
+      if (newStatus) {
+        setStatus(newStatus);
+        localStorage.setItem("clock-status", newStatus);
+      }
+      setMessage(successMessage);
     } catch (e: any) {
-      setMessage(e.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleClockOut = async () => {
-    setLoading(true);
-    try {
-      await clockOut(username, code);
-      setStatus("out");
-      localStorage.removeItem("clock-status");
-      setMessage("Succesvol uitgeklokt");
-    } catch (e: any) {
-      setMessage(e.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleStartBreak = async () => {
-    setLoading(true);
-    try {
-      await startBreak(username, code);
-      setStatus("break");
-      localStorage.setItem("clock-status", "break");
-      setMessage("Pauze gestart");
-    } catch (e: any) {
-      setMessage(e.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleEndBreak = async () => {
-    setLoading(true);
-    try {
-      await endBreak(username, code);
-      setStatus("in");
-      localStorage.setItem("clock-status", "in");
-      setMessage("Pauze beëindigd");
-    } catch (e: any) {
-      setMessage(e.message);
+      setMessage(e.message || "Er is een fout opgetreden");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: "auto", padding: 20 }}>
-      <h2>Klok Systeem</h2>
+    <div style={containerStyle}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <h1>Clocky</h1>
+        </div>
+        <input style={inputStyle(status !== "out")} placeholder="Naam" value={username} onChange={(e) => setUsername(e.target.value)} disabled={status !== "out"} />
 
-      <input placeholder="Naam" value={username} onChange={(e) => setUsername(e.target.value)} />
-      <input placeholder="Code" type="password" value={code} onChange={(e) => setCode(e.target.value)} />
+        <input
+          style={inputStyle(status === "in" || status === "break")}
+          placeholder="Code"
+          type="password"
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          disabled={status === "in" || status === "break"}
+        />
+      </div>
 
       <div style={{ marginTop: 20 }}>
         {status === "out" && (
-          <button onClick={handleClockIn} disabled={loading || !username || !code}>
-            Inklokken
+          <button
+            onClick={() => handleAction(() => clockIn(username, code), "Succesvol ingeklokt", "in")}
+            disabled={loading || !username || !code}
+            style={getButtonStyle(loading || !username || !code, "#3a86ff")}
+          >
+            {loading ? <ButtonSpinner text="Inklokken" /> : "Inklokken"}
           </button>
         )}
 
         {status === "in" && (
-          <>
-            <button onClick={handleStartBreak} disabled={loading}>
-              Pauze Starten
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            <button onClick={() => handleAction(() => startBreak(username, code), "Pauze gestart", "break")} disabled={loading} style={getButtonStyle(loading, "#4CAF50")}>
+              {loading ? <ButtonSpinner text="Pauze Starten" /> : "Pauze Starten"}
             </button>
-            <button onClick={handleClockOut} disabled={loading}>
-              Uitklokken
+
+            <button onClick={() => handleAction(() => clockOut(username, code), "Succesvol uitgeklokt", "out")} disabled={loading} style={getButtonStyle(loading, "#F44336")}>
+              {loading ? <ButtonSpinner text="Uitklokken" /> : "Uitklokken"}
             </button>
-          </>
+          </div>
         )}
 
         {status === "break" && (
-          <button onClick={handleEndBreak} disabled={loading}>
-            Pauze Stoppen
+          <button onClick={() => handleAction(() => endBreak(username, code), "Pauze beëindigd", "in")} disabled={loading} style={getButtonStyle(loading, "#FF9800")}>
+            {loading ? <ButtonSpinner text="Pauze Stoppen" /> : "Pauze Stoppen"}
           </button>
         )}
       </div>
 
-      {message && <p style={{ marginTop: 20 }}>{message}</p>}
+      {message && <div style={messageStyle}>{message}</div>}
     </div>
   );
 };
+
+interface ButtonSpinnerProps {
+  text: string;
+}
+
+const ButtonSpinner: React.FC<ButtonSpinnerProps> = ({ text }) => (
+  <>
+    <span style={{ visibility: "hidden" }}>{text}</span>
+    <div
+      style={{
+        position: "absolute",
+        left: "50%",
+        top: "50%",
+        transform: "translate(-50%, -50%)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div
+        style={{
+          width: "20px",
+          height: "20px",
+          border: "3px solid rgba(255,255,255,0.3)",
+          borderRadius: "50%",
+          borderTopColor: "white",
+          animation: "spin 1s linear infinite",
+        }}
+      />
+    </div>
+  </>
+);

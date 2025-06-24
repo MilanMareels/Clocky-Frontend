@@ -21,5 +21,6 @@ export const endBreak = (username: string, code: string) => postJSON("/endBreak"
 export async function getReport(username: string) {
   const res = await fetch(`${BASE_URL}/clock/${username}`);
   if (!res.ok) throw new Error(await res.text());
+
   return res.json();
 }
