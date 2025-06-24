@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { clockIn, clockOut, startBreak, endBreak } from "./api";
-
 import { containerStyle, inputStyle, getButtonStyle, messageStyle } from "./styles";
 
 interface Props {}
