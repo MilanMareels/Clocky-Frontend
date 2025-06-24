@@ -29,7 +29,8 @@ export const ClockInOut: React.FC<Props> = () => {
       }
       setMessage(successMessage);
     } catch (e: any) {
-      setMessage(e.message || "Er is een fout opgetreden");
+      const errorData = JSON.parse(e.message);
+      setMessage(errorData.message || "Er is een fout opgetreden");
     } finally {
       setLoading(false);
     }
@@ -47,16 +48,9 @@ export const ClockInOut: React.FC<Props> = () => {
         <div style={{ display: "flex", justifyContent: "center" }}>
           <h1>Clocky</h1>
         </div>
-        <input style={inputStyle(status !== "out")} placeholder="Naam" value={username.toLocaleLowerCase()} onChange={(e) => setUsername(e.target.value)} disabled={status !== "out"} />
+        <input style={inputStyle(status !== "out")} placeholder="Naam" value={username.toLocaleLowerCase()} onChange={(e) => setUsername(e.target.value)} />
 
-        <input
-          style={inputStyle(status === "in" || status === "break")}
-          placeholder="Code"
-          type="password"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          disabled={status === "in" || status === "break"}
-        />
+        <input style={inputStyle(status === "in" || status === "break")} placeholder="Code" type="password" value={code} onChange={(e) => setCode(e.target.value)} />
       </div>
 
       <div style={{ marginTop: 20 }}>

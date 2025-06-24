@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getReport } from "./api";
 import { WorkRecord } from "./types";
-import "./AdminReport.css"; // We importeren een apart CSS bestand
+import "./AdminReport.css";
 
 interface Props {
   username: string;
@@ -49,9 +49,9 @@ export const AdminReport: React.FC<Props> = ({ username }) => {
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("nl-NL", {
-      weekday: "short",
+      weekday: "long",
       day: "numeric",
-      month: "short",
+      month: "long",
     });
   };
 
@@ -72,70 +72,50 @@ export const AdminReport: React.FC<Props> = ({ username }) => {
 
   return (
     <div className="report-container">
-      <div className="report-card">
-        <div className="report-header">
-          <h2>Werkrapport voor {username}</h2>
+      <div className="report-header">
+        <h2>Werkrapport voor {username}</h2>
+        <div className="total-hours">
+          <span>Totaal gewerkte uren: </span>
+          <strong>{report.totalWorked}</strong>
         </div>
+      </div>
 
-        <div className="report-summary">
-          <div className="total-hours">
-            <span className="summary-label">Totaal gewerkte uren:</span>
-            <span className="hours-badge">{report.totalWorked}</span>
-          </div>
-        </div>
+      <div className="days-container">
+        {report.days.length === 0 ? (
+          <div className="no-data">Geen werkgegevens gevonden</div>
+        ) : (
+          report.days.map((day) => (
+            <div key={day.date} className="day-card">
+              <div className="day-header">
+                <h3>{formatDate(day.date)}</h3>
+                <span className="worked-hours">{day.workedHours}</span>
+              </div>
 
-        <div className="table-container">
-          <table className="report-table">
-            <thead>
-              <tr>
-                <th>Datum</th>
-                <th>Inklok</th>
-                <th>Uitklok</th>
-                <th>Pauzes</th>
-                <th>Gewerkte uren</th>
-              </tr>
-            </thead>
-            <tbody>
-              {report.days.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="no-data">
-                    Geen werkgegevens gevonden
-                  </td>
-                </tr>
-              ) : (
-                report.days.map((day) => (
-                  <tr key={day.date} className="table-row">
-                    <td className="date-cell">
-                      <div>{formatDate(day.date)}</div>
-                    </td>
-                    <td>
-                      <div>{formatTime(day.clockIn)}</div>
-                    </td>
-                    <td>
-                      <div>{day.clockOut ? formatTime(day.clockOut) : "-"}</div>
-                    </td>
-                    <td className="breaks-cell">
-                      {day.breaks.length > 0 ? (
-                        <ul className="breaks-list">
-                          {day.breaks.map((b, i) => (
-                            <li key={i}>
-                              {formatTime(b.start)} - {b.end ? formatTime(b.end) : "..."}
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <span className="no-breaks">-</span>
-                      )}
-                    </td>
-                    <td>
-                      <span className="worked-hours-badge">{day.workedHours}</span>
-                    </td>
-                  </tr>
-                ))
+              <div className="time-row">
+                <span className="time-label">Inklok:</span>
+                <span>{formatTime(day.clockIn)}</span>
+              </div>
+
+              <div className="time-row">
+                <span className="time-label">Uitklok:</span>
+                <span>{day.clockOut ? formatTime(day.clockOut) : "-"}</span>
+              </div>
+
+              {day.breaks.length > 0 && (
+                <div className="breaks-section">
+                  <div className="time-label">Pauzes:</div>
+                  <ul className="breaks-list">
+                    {day.breaks.map((b, i) => (
+                      <li key={i}>
+                        {formatTime(b.start)} - {b.end ? formatTime(b.end) : "..."}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               )}
-            </tbody>
-          </table>
-        </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
