@@ -3,18 +3,18 @@ import { getReport } from "./api";
 import { WorkRecord } from "./types";
 import "./AdminReport.css";
 
-interface Props {
-  username: string;
-}
-
 interface Report {
   days: WorkRecord[];
   totalWorked: string;
 }
 
-export const AdminReport: React.FC<Props> = ({ username }) => {
+interface AdminReportProps {
+  username: string;
+}
+
+export const AdminReport: React.FC<AdminReportProps> = ({ username }) => {
   const [report, setReport] = useState<Report>({ days: [], totalWorked: "0u 0m" });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -32,12 +32,15 @@ export const AdminReport: React.FC<Props> = ({ username }) => {
           setError("Ongeldige data ontvangen van server");
         }
       } catch (e: any) {
-        setError(e.message || "Er is iets misgegaan");
+        setError(e.message || "Er is iets misgegaan bij het ophalen van het rapport");
       } finally {
         setLoading(false);
       }
     };
-    fetchReport();
+
+    if (username) {
+      fetchReport();
+    }
   }, [username]);
 
   const formatTime = (dateString: string) => {
@@ -55,20 +58,23 @@ export const AdminReport: React.FC<Props> = ({ username }) => {
     });
   };
 
-  if (loading)
+  if (loading) {
     return (
       <div className="loading-spinner">
         <div className="spinner"></div>
       </div>
     );
+  }
 
-  if (error)
+  if (error) {
     return (
       <div className="error-message">
         <p className="error-title">Fout</p>
         <p>{error}</p>
+        <p>Controleer of je gegevens correct zijn ingevuld en probeer opnieuw.</p>
       </div>
     );
+  }
 
   return (
     <div className="report-container">

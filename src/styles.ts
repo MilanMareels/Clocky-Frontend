@@ -65,3 +65,13 @@ export const messageStyle = {
   color: "#333",
   border: "1px solid #e0e0e0",
 };
+
+export const inlogStyle = {
+  padding: "10px 15px",
+  borderRadius: "8px",
+  backgroundColor: "#3a86ff",
+  textAlign: "center" as const,
+  color: "white",
+  border: "1px solid #e0e0e0",
+  width: "100%",
+};
