@@ -18,8 +18,8 @@ export const startBreak = (username: string, code: string) => postJSON("/startBr
 
 export const endBreak = (username: string, code: string) => postJSON("/endBreak", { username, code });
 
-export async function getReport(username: string) {
-  const res = await fetch(`${BASE_URL}/clock/${username}`);
+export async function getReport(username: string, code: string) {
+  const res = await fetch(`${BASE_URL}/clock/${username}/${code}`);
   if (!res.ok) throw new Error(await res.text());
 
   return res.json();

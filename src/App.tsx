@@ -14,9 +14,13 @@ const App: React.FC = () => {
   // Check of er een user is opgeslagen
   const checkUserStatus = () => {
     const savedUsername = localStorage.getItem("clock-username");
+    const savedCode = localStorage.getItem("clock-code");
     setHasUser(!!savedUsername);
     if (savedUsername) {
       setAdminUsername(savedUsername);
+    }
+    if (savedCode) {
+      setAdminCode(savedCode);
     }
   };
 
@@ -68,7 +72,7 @@ const App: React.FC = () => {
                 }}
               >
                 <h3 style={{ textAlign: "center", marginBottom: 15, fontFamily: "sans-serif" }}>Inloggen voor werkrapport</h3>
-                <input style={{ ...inputStyle(false), marginBottom: 10 }} placeholder="Naam" value={adminUsername} onChange={(e) => setAdminUsername(e.target.value)} />
+                <input style={{ ...inputStyle(false), marginBottom: 10 }} placeholder="Naam" value={adminUsername.toLocaleLowerCase()} onChange={(e) => setAdminUsername(e.target.value)} />
                 <input style={{ ...inputStyle(false), marginBottom: 15 }} placeholder="Code" type="password" value={adminCode} onChange={(e) => setAdminCode(e.target.value)} />
                 <button onClick={handleAdminCheck} disabled={adminLoading || !adminUsername || !adminCode} style={getButtonStyle(adminLoading || !adminUsername || !adminCode, "#3a86ff")}>
                   {adminLoading ? <ButtonSpinner text="Inloggen" /> : "Rapport tonen"}
@@ -77,7 +81,7 @@ const App: React.FC = () => {
               </div>
             ) : (
               <>
-                <AdminReport username={adminUsername} />
+                <AdminReport username={adminUsername} code={adminCode} />
               </>
             )}
           </div>

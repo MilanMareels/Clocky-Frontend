@@ -10,9 +10,10 @@ interface Report {
 
 interface AdminReportProps {
   username: string;
+  code: string;
 }
 
-export const AdminReport: React.FC<AdminReportProps> = ({ username }) => {
+export const AdminReport: React.FC<AdminReportProps> = ({ username, code }) => {
   const [report, setReport] = useState<Report>({ days: [], totalWorked: "0u 0m" });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +22,7 @@ export const AdminReport: React.FC<AdminReportProps> = ({ username }) => {
     const fetchReport = async () => {
       setLoading(true);
       try {
-        const data = await getReport(username);
+        const data = await getReport(username, code);
         if (data && Array.isArray(data.days)) {
           setReport({
             days: data.days.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()),
