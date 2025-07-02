@@ -4,17 +4,19 @@ import { WorkRecord } from "./types";
 import "./AdminReport.css";
 
 interface Report {
+  project: string;
   days: WorkRecord[];
   totalWorked: string;
 }
 
 interface AdminReportProps {
   username: string;
+  projectName: string;
   code: string;
 }
 
-export const AdminReport: React.FC<AdminReportProps> = ({ username, code }) => {
-  const [report, setReport] = useState<Report>({ days: [], totalWorked: "0u 0m" });
+export const AdminReport: React.FC<AdminReportProps> = ({ username, code, projectName }) => {
+  const [report, setReport] = useState<Report>({ project: "", days: [], totalWorked: "0u 0m" });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,9 +24,11 @@ export const AdminReport: React.FC<AdminReportProps> = ({ username, code }) => {
     const fetchReport = async () => {
       setLoading(true);
       try {
-        const data = await getReport(username, code);
+        const data = await getReport(username, code, projectName);
+
         if (data && Array.isArray(data.days)) {
           setReport({
+            project: data.project,
             days: data.days.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()),
             totalWorked: data.totalWorked || "0u 0m",
           });
@@ -42,7 +46,7 @@ export const AdminReport: React.FC<AdminReportProps> = ({ username, code }) => {
     if (username) {
       fetchReport();
     }
-  }, [username]);
+  }, []);
 
   const formatTime = (dateString: string) => {
     return new Date(dateString).toLocaleTimeString("nl-NL", {
@@ -80,7 +84,7 @@ export const AdminReport: React.FC<AdminReportProps> = ({ username, code }) => {
   return (
     <div className="report-container">
       <div className="report-header">
-        <h2>Werkrapport voor {username}</h2>
+        <h2>Werkrapport voor {username.charAt(0).toUpperCase() + username.slice(1)}</h2>
         <div className="total-hours">
           <span>Totaal gewerkte uren: </span>
           <strong>{report.totalWorked}</strong>
@@ -95,7 +99,10 @@ export const AdminReport: React.FC<AdminReportProps> = ({ username, code }) => {
             <div key={day.date} className="day-card">
               <div className="day-header">
                 <h3>{formatDate(day.date)}</h3>
-                <span className="worked-hours">{day.workedHours}</span>
+                <div className="tag">
+                  <span className="project">{report.project.charAt(0).toUpperCase() + report.project.slice(1)}</span>
+                  <span className="worked-hours">{day.workedHours}</span>
+                </div>
               </div>
 
               <div className="time-row">

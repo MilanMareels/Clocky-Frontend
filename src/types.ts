@@ -1,4 +1,5 @@
 export interface WorkRecord {
+  project: string;
   date: string;
   clockIn: string;
   clockOut: string | null;

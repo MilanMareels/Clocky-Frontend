@@ -101,6 +101,20 @@
   font-weight: 500;
 }
 
+.project {
+  background-color: #e8f5e9; /* zacht groen */
+  color: #2e7d32; /* donkergroen */
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.tag {
+  display: flex;
+  gap: 5px;
+}
+
 /* Time rows */
 .time-row {
   display: flex;

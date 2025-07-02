@@ -7,6 +7,7 @@ const App: React.FC = () => {
   const [view, setView] = useState<"user" | "werkrapport">("user");
   const [hasUser, setHasUser] = useState(false);
   const [adminUsername, setAdminUsername] = useState("");
+  const [projectName, setProjectName] = useState("");
   const [adminCode, setAdminCode] = useState("");
   const [adminLoading, setAdminLoading] = useState(false);
   const [adminError, setAdminError] = useState("");
@@ -73,6 +74,7 @@ const App: React.FC = () => {
               >
                 <h3 style={{ textAlign: "center", marginBottom: 15, fontFamily: "sans-serif" }}>Inloggen voor werkrapport</h3>
                 <input style={{ ...inputStyle(false), marginBottom: 10 }} placeholder="Naam" value={adminUsername.toLocaleLowerCase()} onChange={(e) => setAdminUsername(e.target.value)} />
+                <input style={{ ...inputStyle(false), marginBottom: 10 }} placeholder="Project naam" value={projectName.toLocaleLowerCase()} onChange={(e) => setProjectName(e.target.value)} />
                 <input style={{ ...inputStyle(false), marginBottom: 15 }} placeholder="Code" type="password" value={adminCode} onChange={(e) => setAdminCode(e.target.value)} />
                 <button onClick={handleAdminCheck} disabled={adminLoading || !adminUsername || !adminCode} style={getButtonStyle(adminLoading || !adminUsername || !adminCode, "#3a86ff")}>
                   {adminLoading ? <ButtonSpinner text="Inloggen" /> : "Rapport tonen"}
@@ -81,7 +83,7 @@ const App: React.FC = () => {
               </div>
             ) : (
               <>
-                <AdminReport username={adminUsername} code={adminCode} />
+                <AdminReport username={adminUsername} code={adminCode} projectName={projectName} />
               </>
             )}
           </div>

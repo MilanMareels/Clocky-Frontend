@@ -10,16 +10,16 @@ async function postJSON(path: string, data: any) {
   return res.json();
 }
 
-export const clockIn = (username: string, code: string) => postJSON("/clockin", { username, code });
+export const clockIn = (username: string, code: string, project: string) => postJSON("/clockin", { username, code, project });
 
-export const clockOut = (username: string, code: string) => postJSON("/clockout", { username, code });
+export const clockOut = (username: string, code: string, project: string) => postJSON("/clockout", { username, code, project });
 
-export const startBreak = (username: string, code: string) => postJSON("/startBreak", { username, code });
+export const startBreak = (username: string, code: string, project: string) => postJSON("/startBreak", { username, code, project });
 
-export const endBreak = (username: string, code: string) => postJSON("/endBreak", { username, code });
+export const endBreak = (username: string, code: string, project: string) => postJSON("/endBreak", { username, code, project });
 
-export async function getReport(username: string, code: string) {
-  const res = await fetch(`${BASE_URL}/clock/${username}/${code}`);
+export async function getReport(username: string, code: string, project: string) {
+  const res = await fetch(`${BASE_URL}/clock/${username}/${code}/${project}`);
   if (!res.ok) throw new Error(await res.text());
 
   return res.json();

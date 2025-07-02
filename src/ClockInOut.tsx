@@ -8,6 +8,7 @@ interface Props {
 
 export const ClockInOut: React.FC<Props> = ({ onAuthChange }) => {
   const [username, setUsername] = useState("");
+  const [project, setProject] = useState("");
   const [code, setCode] = useState("");
   const [status, setStatus] = useState<"out" | "in" | "break">("out");
   const [message, setMessage] = useState<string | null>(null);
@@ -113,6 +114,7 @@ export const ClockInOut: React.FC<Props> = ({ onAuthChange }) => {
         {status === "out" && (
           <>
             <input style={inputStyle(false)} placeholder="Naam" value={username.toLocaleLowerCase()} onChange={(e) => setUsername(e.target.value)} />
+            <input style={inputStyle(false)} placeholder="Project naam" value={project.toLocaleLowerCase()} onChange={(e) => setProject(e.target.value)} />
             <input style={inputStyle(false)} placeholder="Code" type="password" value={code} onChange={(e) => setCode(e.target.value)} />
           </>
         )}
@@ -141,7 +143,7 @@ export const ClockInOut: React.FC<Props> = ({ onAuthChange }) => {
       <div style={{ marginTop: 20 }}>
         {status === "out" && (
           <button
-            onClick={() => handleAction(() => clockIn(username, code), "Succesvol ingeklokt", "in")}
+            onClick={() => handleAction(() => clockIn(username, code, project), "Succesvol ingeklokt", "in")}
             disabled={loading || !username || !code}
             style={getButtonStyle(loading || !username || !code, "#3a86ff")}
           >
@@ -151,18 +153,18 @@ export const ClockInOut: React.FC<Props> = ({ onAuthChange }) => {
 
         {status === "in" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <button onClick={() => handleAction(() => startBreak(username, code), "Pauze gestart", "break")} disabled={loading} style={getButtonStyle(loading, "#4CAF50")}>
+            <button onClick={() => handleAction(() => startBreak(username, code, project), "Pauze gestart", "break")} disabled={loading} style={getButtonStyle(loading, "#4CAF50")}>
               {loading ? <ButtonSpinner text="Pauze Starten" /> : "Pauze Starten"}
             </button>
 
-            <button onClick={() => handleAction(() => clockOut(username, code), "Succesvol uitgeklokt", "out")} disabled={loading} style={getButtonStyle(loading, "#F44336")}>
+            <button onClick={() => handleAction(() => clockOut(username, code, project), "Succesvol uitgeklokt", "out")} disabled={loading} style={getButtonStyle(loading, "#F44336")}>
               {loading ? <ButtonSpinner text="Uitklokken" /> : "Uitklokken"}
             </button>
           </div>
         )}
 
         {status === "break" && (
-          <button onClick={() => handleAction(() => endBreak(username, code), "Pauze beëindigd", "in")} disabled={loading} style={getButtonStyle(loading, "#FF9800")}>
+          <button onClick={() => handleAction(() => endBreak(username, code, project), "Pauze beëindigd", "in")} disabled={loading} style={getButtonStyle(loading, "#FF9800")}>
             {loading ? <ButtonSpinner text="Pauze Stoppen" /> : "Pauze Stoppen"}
           </button>
         )}
