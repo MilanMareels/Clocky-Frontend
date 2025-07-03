@@ -32,12 +32,14 @@ export const ClockInOut: React.FC<Props> = ({ onAuthChange }) => {
     const savedStatus = localStorage.getItem("clock-status");
     const savedUsername = localStorage.getItem("clock-username");
     const savedCode = localStorage.getItem("clock-code");
+    const savedProject = localStorage.getItem("clock-project");
 
     if (savedStatus === "in" || savedStatus === "break") {
       setStatus(savedStatus);
     }
     if (savedUsername) setUsername(savedUsername);
     if (savedCode) setCode(savedCode);
+    if (savedProject) setProject(savedProject);
   }, []);
 
   const formatTime = (seconds: number) => {
@@ -59,6 +61,7 @@ export const ClockInOut: React.FC<Props> = ({ onAuthChange }) => {
 
         if (newStatus === "in") {
           localStorage.setItem("clock-username", username);
+          localStorage.setItem("clock-project", project);
           localStorage.setItem("clock-code", code);
           setBreakTime(0);
           if (onAuthChange) onAuthChange();
@@ -70,10 +73,12 @@ export const ClockInOut: React.FC<Props> = ({ onAuthChange }) => {
         }
         if (newStatus === "out") {
           localStorage.removeItem("clock-username");
+          localStorage.removeItem("clock-project");
           localStorage.removeItem("clock-code");
           localStorage.removeItem("break-start-time");
           setUsername("");
           setCode("");
+          setProject("");
           setBreakStartTime(null);
           setBreakTime(0);
           if (onAuthChange) onAuthChange();

@@ -16,12 +16,16 @@ const App: React.FC = () => {
   const checkUserStatus = () => {
     const savedUsername = localStorage.getItem("clock-username");
     const savedCode = localStorage.getItem("clock-code");
+    const savedProject = localStorage.getItem("clock-project");
     setHasUser(!!savedUsername);
     if (savedUsername) {
       setAdminUsername(savedUsername);
     }
     if (savedCode) {
       setAdminCode(savedCode);
+    }
+    if (savedProject) {
+      setProjectName(savedProject);
     }
   };
 
