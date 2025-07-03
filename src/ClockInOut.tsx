@@ -144,8 +144,8 @@ export const ClockInOut: React.FC<Props> = ({ onAuthChange }) => {
         {status === "out" && (
           <button
             onClick={() => handleAction(() => clockIn(username, code, project), "Succesvol ingeklokt", "in")}
-            disabled={loading || !username || !code}
-            style={getButtonStyle(loading || !username || !code, "#3a86ff")}
+            disabled={loading || !username || !code || !project}
+            style={getButtonStyle(loading || !username || !code || !project, "#3a86ff")}
           >
             {loading ? <ButtonSpinner text="Inklokken" /> : "Inklokken"}
           </button>
